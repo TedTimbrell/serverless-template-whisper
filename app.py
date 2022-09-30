@@ -8,26 +8,28 @@ from io import BytesIO
 # Load your model to GPU as a global variable here using the variable name "model"
 def init():
     global model
-    
+
     model = whisper.load_model("base")
 
+
+def
 # Inference is ran for every server call
 # Reference your preloaded global model variable here.
 def inference(model_inputs:dict) -> dict:
     global model
 
     # Parse out your arguments
-    mp3BytesString = model_inputs.get('mp3BytesString', None)
+    mp3BytesString = model_inputs.get('webmBytesString', None)
     if mp3BytesString == None:
         return {'message': "No input provided"}
-    
+
     mp3Bytes = BytesIO(base64.b64decode(mp3BytesString.encode("ISO-8859-1")))
-    with open('input.mp3','wb') as file:
+    with open('input.webm','wb') as file:
         file.write(mp3Bytes.getbuffer())
-    
+
     # Run the model
-    result = model.transcribe("input.mp3")
+    result = model.transcribe("input.webm")
     output = {"text":result["text"]}
-    os.remove("input.mp3")
+    os.remove("input.webm")
     # Return the results as a dictionary
     return output
